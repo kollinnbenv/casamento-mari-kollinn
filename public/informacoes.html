@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Casamento - Informações</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header>
+    <h1>Detalhes do Casamento</h1>
+  </header>
+
+  <!-- Menu de navegação (por padrão, escondido via CSS ou script) -->
+  <nav class="menu" id="mainMenu" style="display: none;">
+    <button onclick="goToPage('index.html')">Home</button>
+    <button onclick="validarAcesso('informacoes.html')">Informações</button>
+    <button onclick="validarAcesso('localizacao.html')">Localização</button>
+    <button onclick="validarAcesso('confirmar.html')">Confirmar Presença</button>
+    <button onclick="validarAcesso('galeria.html')">Galeria de fotos</button>
+  </nav>
+
+  <main>
+    <p>
+     O casamento acontecerá dia <strong>08/02/2025</strong>, com chegada as  <strong>17h</strong>, cerimônia do casamento às <strong>18h</strong> e janta às <strong>19h</strong> no restaurante Maria Farinha
+<br> <br>
+
+     Esse é um local muito importante para nós. Lá comemoramos todos os anos datas especiais do nosso relacionamento e nada mais justo do que celebrarmos nossa relação com vocês também num local tão especial. <br> <br>
+
+      Infelizmente não conseguimos pagar 100% do valor, então cada convidado irá pagar individualmente 
+     <strong>R$ 50,00 do jantar + consumação individual de bebidas de sua escolha</strong>  <br> 
+     <br> Ou seja, <strong> cada convidado receberá sua comanda individual com o valor do jantar + bebidas que consumir no dia</strong><br>
+     <br>
+     <i>Caso você NÃO CONSIGA pagar, nos avise com antecedência no botão "Confirmar Presença", mas não deixe de ir por conta disso, sua presença é importante para nós</i> <br> <br>
+
+     <strong> Traje: </strong> Sua roupa favorita <br>
+     <i>Não é um evento formal, queremos que todes se sintam à vontade</i><br> <br>
+     caso você queira contribuir com algo ou nos presentear, você pode nos ajudar com pix 
+
+    </p>
+    <input type="hidden" id="endereco" value="48996790679" />
+      <button id="btnEnviar" onclick="copiarEndereco()"> PIX: 48 996790679</button>
+  </main>
+  <script>
+    // Se o usuário tentar acessar sem ter validado telefone:
+    if (!localStorage.getItem('phone')) {
+      alert('Por favor, valide seu telefone antes de acessar essa página.');
+      window.location.href = 'index.html';
+    }
+    function copiarEndereco() {
+      // Pegamos o valor do input hidden
+      const endereco = document.getElementById('endereco').value;
+      
+      // Usamos a API do navegador para copiar
+      navigator.clipboard.writeText(endereco)
+        .then(() => {
+          alert("Endereço copiado!");
+        })
+        .catch(err => {
+          console.error("Erro ao copiar: ", err);
+        });
+    }
+  </script>
+  <script src="./script.js"></script>
+</body>
+</html>

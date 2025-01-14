@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Casamento - Confirmar Presença</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header>
+    <h1>Confirmação de Presença</h1>
+  </header>
+
+  <!-- Menu de navegação (por padrão, escondido via CSS ou script) -->
+  <nav class="menu" id="mainMenu" style="display: none;">
+    <button onclick="goToPage('index.html')">Home</button>
+    <button onclick="validarAcesso('informacoes.html')">Informações</button>
+    <button onclick="validarAcesso('localizacao.html')">Localização</button>
+    <button onclick="validarAcesso('confirmar.html')">Confirmar Presença</button>
+    <button onclick="validarAcesso('galeria.html')">Galeria de fotos</button>
+  </nav>
+
+  <main>
+    <h2>Formulário</h2>
+    <div id="formDinamico"></div>
+    <button id="btnEnviar" onclick="enviarFormulario()">Confirmar presença e responder preferências</button>
+    <p id="resultadoEnvio"></p>
+  </main>
+  <script>
+    // Se o usuário tentar acessar sem ter validado telefone:
+    if (!localStorage.getItem('phone')) {
+      alert('Por favor, valide seu telefone antes de acessar essa página.');
+      window.location.href = 'index.html';
+    }
+  </script>
+  <script src="./script.js"></script>
+</body>
+</html>
