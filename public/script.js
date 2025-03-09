@@ -13,7 +13,7 @@ function exibirMenu(isVisible) {
     const apenasDigitos = input.replace(/\D/g, '');
   
     // Se tiver 11 dígitos (DDD + 9 dígitos)
-    // Exemplo: 48996790679 -> "48 99679-0679"
+    // Exemplo:  -> ""
     if (apenasDigitos.length === 11) {
       const ddd = apenasDigitos.slice(0, 2);
       const parte1 = apenasDigitos.slice(2, 7);

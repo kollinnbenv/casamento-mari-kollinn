@@ -14,7 +14,7 @@ const dbData = JSON.parse(fs.readFileSync(dbFilePath, 'utf8'));
 
 // Defina aqui o número de WhatsApp que receberá as mensagens
 // ou utilize uma variável de ambiente: process.env.WHATSAPP_NUMBER
-const WHATSAPP_NUMBER = process.env.WHATSAPP_NUMBER || '5541999999999';
+const WHATSAPP_NUMBER = process.env.WHATSAPP_NUMBER || '';
 
 // Servir arquivos estáticos da pasta 'public'
 app.use(express.static(path.join(__dirname, 'public')));
@@ -61,7 +61,7 @@ app.get('/api/convidados', (req, res) => {
  * POST /api/confirmar
  * Body esperado:
  * {
- *   "phone": "48 99679-0679",
+ *   "phone": ",
  *   "respostas": [
  *      { "vegetariano": "Sim", "frutosDoMar": "Não", "preferencia": "Carne" },
  *      ...

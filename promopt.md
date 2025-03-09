@@ -7,7 +7,7 @@ json
 
 {
   "convidados": {
-    "48 99679-0679": ["Kollinn Benvenutti", "Maria da Silva"],
+    "-": ["Kollinn Benvenutti", "Maria da Silva"],
     "48 88888-8888": ["Ana Oliveira"],
     "48 77777-7777": ["Pedro Souza", "Carla Souza", "Paulo Santos"]
   }
@@ -37,7 +37,7 @@ Centralizar o conteúdo na tela, para que o site mantenha a mesma estética em t
 Controle de acesso pelas rotas (validação de telefone)
 
 Antes de permitir o acesso às páginas (além da Home), o usuário deverá inserir um número de telefone.
-Se o telefone digitado existir como chave em db.json (por exemplo, "48 99679-0679"), então o usuário poderá acessar as demais páginas. Caso contrário, não terá acesso.
+Se o telefone digitado existir como chave em db.json (por exemplo, "4"), então o usuário poderá acessar as demais páginas. Caso contrário, não terá acesso.
 Formulário dinâmico de confirmação
 
 Na página de Confirmar presença, ao carregar, deve-se buscar no db.json os convidados (array de nomes) referentes ao telefone que o usuário digitou.
