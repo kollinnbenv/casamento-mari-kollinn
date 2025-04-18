@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: casamento-mari-kollinn
+    runtime: docker
+    buildCommand: docker build -t casamento-mari-kollinn .
+    startCommand: docker run -p $PORT:3000 -e PORT=$PORT casamento-mari-kollinn
+    envVars:
+      - key: PORT
+        value: 3000
+    autoDeploy: true 
