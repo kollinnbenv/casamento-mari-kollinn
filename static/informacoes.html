@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Casamento - Informações</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header>
+    <h1>Detalhes do Casamento</h1>
+  </header>
+
+  <!-- Menu de navegação (sempre visível) -->
+  <nav class="menu" id="mainMenu">
+    <button onclick="goToPage('index.html')">Home</button>
+    <button onclick="goToPage('informacoes.html')">Informações</button>
+    <button onclick="goToPage('localizacao.html')">Localização</button>
+    <button onclick="goToPage('galeria.html')">Galeria de fotos</button>
+    <button onclick="goToPage('confirmar.html')">Confirmar Presença</button>
+  </nav>
+
+  <main>
+    <p>
+     O casamento aconteceu dia <strong>08/02/2025</strong>, com chegada as  <strong>17h</strong>, cerimônia do casamento às <strong>18h</strong> e janta às <strong>19h</strong> num restaurante.
+<br> <br>
+
+     Esse é um local muito importante para nós. Lá comemoramos todos os anos datas especiais do nosso relacionamento e nada mais justo do que termos celebrado nossa relação com os convidados também num local tão especial. <br> <br>
+
+  
+     <strong>Pessoas vegetarianas comeram o famoso fricasse de palmito com grão de bico que o Kollinn fez na véspera do casamento.</strong><br><br>
+
+     <strong> Traje: </strong> Sua roupa favorita <br>
+     <i>Não é um evento formal, queremos que todes se sintam à vontade</i><br> <br>
+     caso você queira contribuir com algo ou nos presentear, você pode nos ajudar com pix 
+
+    </p>
+    <input type="hidden" id="endereco" value="pix@exemplo.com.br" />
+    <button id="btnEnviar" onclick="copiarEndereco()">Copiar Chave PIX</button>
+  </main>
+  <script>
+    function copiarEndereco() {
+      // Pegamos o valor do input hidden
+      const endereco = document.getElementById('endereco').value;
+      
+      // Usamos a API do navegador para copiar
+      navigator.clipboard.writeText(endereco)
+        .then(() => {
+          alert("Chave PIX copiada!");
+        })
+        .catch(err => {
+          console.error("Erro ao copiar: ", err);
+        });
+    }
+  </script>
+  <script src="./script.js"></script>
+</body>
+</html>

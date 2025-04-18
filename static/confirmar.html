@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Casamento - Confirmar Presença</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header>
+    <h1>Confirmação de Presença</h1>
+  </header>
+
+  <!-- Menu de navegação (sempre visível) -->
+  <nav class="menu" id="mainMenu">
+    <button onclick="goToPage('index.html')">Home</button>
+    <button onclick="goToPage('informacoes.html')">Informações</button>
+    <button onclick="goToPage('localizacao.html')">Localização</button>
+    <button onclick="goToPage('galeria.html')">Galeria de fotos</button>
+    <button onclick="goToPage('confirmar.html')">Confirmar Presença</button>
+  </nav>
+
+  <main>
+    <h2>Formulário</h2>
+    <div id="formDinamico"></div>
+    <button id="btnEnviar" onclick="enviarFormulario()">Confirmar presença e responder preferências</button>
+    <p id="resultadoEnvio"></p>
+  </main>
+  
+  <script src="./script.js"></script>
+</body>
+</html>

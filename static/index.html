@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Casamento - Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header>
+    <h1>Casamento Mariana e Kollinn</h1>
+  </header>
+
+  <!-- Menu de navegação (sempre visível) -->
+  <nav class="menu" id="mainMenu">
+    <button onclick="goToPage('index.html')">Home</button>
+    <button onclick="goToPage('informacoes.html')">Informações</button>
+    <button onclick="goToPage('localizacao.html')">Localização</button>
+    <button onclick="goToPage('galeria.html')">Galeria de fotos</button>
+    <button onclick="goToPage('confirmar.html')">Confirmar Presença</button>
+  </nav>
+
+  <!-- Galeria com imagens -->
+  <div class="img-centralizada">
+    <img src="foto4.jpg" alt="Foto 4" onclick="openModal(this.src)">
+    <!-- ... Repita para todas as suas fotos ... -->
+  </div>
+
+  <!-- Modal (lightbox) que será exibido ao clicar em qualquer imagem -->
+  <div id="myModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImg">
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Casamento - Localização</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header>
+    <h1>Localização do Casamento</h1>
+  </header>
+
+  <!-- Menu de navegação (sempre visível) -->
+  <nav class="menu" id="mainMenu">
+    <button onclick="goToPage('index.html')">Home</button>
+    <button onclick="goToPage('informacoes.html')">Informações</button>
+    <button onclick="goToPage('localizacao.html')">Localização</button>
+    <button onclick="goToPage('galeria.html')">Galeria de fotos</button>
+    <button onclick="goToPage('confirmar.html')">Confirmar Presença</button>
+  </nav>
+
+  <main>
+    <div class="map-container">
+      <!-- Substitua o src abaixo pelo link do Google Maps do seu evento -->
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d452704.27301371476!2d-49.09410105463726!3d-27.57020209325301!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9527394eb2c632d7%3A0x81bc550b6a04c746!2sFlorian%C3%B3polis%2C%20SC!5e0!3m2!1spt-BR!2sbr!4v1741125077118!5m2!1spt-BR!2sbr"
+        width="100%"
+        height="300"
+        style="border:0;"
+        allowfullscreen
+      ></iframe>
+      <input type="hidden" id="endereco" value="Onde mora a felicidade " />
+      <button id="btnEnviar" onclick="copiarEndereco()">
+        Copiar Endereço
+      </button>
+    </div>
+  </main>
+  <script>
+    function copiarEndereco() {
+      // Pegamos o valor do input hidden
+      const endereco = document.getElementById('endereco').value;
+      
+      // Usamos a API do navegador para copiar
+      navigator.clipboard.writeText(endereco)
+        .then(() => {
+          alert("Endereço copiado!");
+        })
+        .catch(err => {
+          console.error("Erro ao copiar: ", err);
+        });
+    }
+  </script>
+  <script src="./script.js"></script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+/* Exemplo de paleta simplificada:
+   - Azul clarinho (Trans)
+   - Rosa clarinho (Trans)
+   - Azul escuro / Roxo / Rosa (Bi)
+*/
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Estilos gerais */
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, #d4f1f9, #f9d4f2);
+  text-align: center;
+  color: #333;
+  padding: 20px;
+}
+
+/* Cabeçalho */
+header {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Menu de navegação */
+.menu {
+  margin-bottom: 20px;
+}
+
+/* Botões do menu */
+.menu button {
+  background-color: #e09eff; /* roxinho claro */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.menu button:hover {
+  background-color: #c77de5;
+}
+
+/* Ajuste de responsividade: 2 botões por linha no mobile */
+@media (max-width: 600px) {
+  .menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .menu button {
+    flex: 1 1 40%;
+    margin: 5px;
+  }
+}
+
+/* Conteúdo principal */
+main {
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Layout da página */
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: sans-serif; 
+  background: url('./background.png') no-repeat center center fixed;
+  background-size: cover; /* Garante que a imagem cubra todo o fundo */
+ /* background: linear-gradient(to bottom, #ccf, #ffc);*/
+}
+
+/* Título da galeria */
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Container da galeria */
+.gallery {
+  /* Grelha de colunas automáticas, se ajustando ao tamanho da tela */
+  display: grid;
+  /* Define quantas colunas mínimas e espacamento */
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+  max-width: 1000px;
+  margin: 0 auto; /* centralizar */
+}
+.img-centralizada {
+  display: flex;          /* Utiliza flexbox para centralizar conteúdo */
+  justify-content: center; /* Centraliza horizontalmente o conteúdo */
+  align-items: center;     /* Centraliza verticalmente o conteúdo */
+  width: 100%;             /* O div ocupa toda a largura */
+  height: 100vh;           /* O div ocupa toda a altura da tela */
+}
+
+.img-centralizada img {
+  max-width: 90%;         /* Garante que a imagem seja responsiva e não ultrapasse 90% da largura */
+  max-height: 90%;        /* Garante que a imagem seja responsiva e não ultrapasse 90% da altura */
+  object-fit: contain;    /* Faz a imagem se ajustar proporcionalmente ao contêiner */
+  border-radius: 8px;     /* Adiciona bordas arredondadas */
+}
+
+
+/* Cada imagem na galeria */
+.gallery img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+/* Efeito de hover nas imagens */
+.gallery img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+}
+
+/* Modal (lightbox) - inicialmente escondido */
+.modal {
+  display: none; /* fica oculto até abrir via JS */
+  position: fixed; /* fica fixo sobre a tela toda */
+  z-index: 9999;   /* fica na frente de todos os elementos */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* se a imagem for maior que a tela, permite rolagem */
+  background-color: rgba(0, 0, 0, 0.8); /* fundo escuro semitransparente */
+  justify-content: center;
+  align-items: center;
+}
+
+/* A imagem dentro do modal (lightbox) */
+.modal-content {
+  display: block;
+  margin: auto; 
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 5px;
+  box-shadow: 0 3px 10px rgba(255,255,255,0.2);
+}
+
+/* Botão (X) de fechar o modal */
+.close {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  color: #fff;
+  font-size: 2rem;
+  font-weight:
+
+}
+
+/* Campo de entrada de telefone na Home */
+.phone-input {
+  margin-top: 20px;
+}
+
+/* Iframe do mapa */
+.map-container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Formulário dinâmico */
+#formDinamico h3 {
+  margin-top: 20px;
+  color: #444;
+}
+
+#formDinamico p {
+  margin: 10px 0 5px;
+}
+
+#formDinamico label {
+  margin-right: 10px;
+}
+
+#btnEnviar {
+  margin-top: 20px;
+  background-color: #4d86e9; /* azul */
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+}
+
+#resultadoEnvio {
+  margin-top: 20px;
+  color: green;
+}
