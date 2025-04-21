@@ -1,1 +1,4 @@
-node_modules/
+/config/
+credentials.json
+token.json
+.env

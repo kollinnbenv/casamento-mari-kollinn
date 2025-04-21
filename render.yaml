@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: casamento-mari-kollinn
+    runtime: docker
+    plan: free
+    repo: https://github.com/kollinn/casamento-mari-kollinn.git
+    branch: main
+    buildFilter:
+      paths:
+        - ./**
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: GOOGLE_DRIVE_FOLDER_ID
+        sync: false
+      - key: CONFIG_DIR
+        value: /etc/secrets
+    disk:
+      name: config-data
+      mountPath: /app/config
+      sizeGB: 1 

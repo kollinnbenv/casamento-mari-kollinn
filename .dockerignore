@@ -1,0 +1,22 @@
+# Arquivos de configuração e tokens
+/config/
+credentials.json
+token.json
+.env
+
+# Arquivos Git
+.git/
+.gitignore
+
+# Arquivos de desenvolvimento
+node_modules/
+server.js
+package.json
+package-lock.json
+*.log
+
+# Outros arquivos desnecessários
+README.md
+/docs/
+promopt.md
+arvore do projeto.png 

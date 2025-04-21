@@ -13,11 +13,11 @@
 
   <!-- Menu de navegação (sempre visível) -->
   <nav class="menu" id="mainMenu">
-    <button onclick="goToPage('index.html')">Home</button>
-    <button onclick="goToPage('informacoes.html')">Informações</button>
-    <button onclick="goToPage('localizacao.html')">Localização</button>
-    <button onclick="goToPage('galeria.html')">Galeria de fotos</button>
-    <button onclick="goToPage('confirmar.html')">Confirmar Presença</button>
+    <button class="nav-button" data-href="/">Home</button>
+    <button class="nav-button" data-href="/informacoes">Informações</button>
+    <button class="nav-button" data-href="/localizacao">Localização</button>
+    <button class="nav-button" data-href="/galeria">Galeria de fotos</button>
+    <button class="nav-button" data-href="/confirmar">Confirmar Presença</button>
   </nav>
 
   <!-- Galeria com imagens -->
@@ -32,6 +32,6 @@
     <img class="modal-content" id="modalImg">
   </div>
 
-  <script src="./script.js"></script>
+  <script src="./js/script.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-FROM golang:1.21-alpine AS build
+FROM golang:1.24-alpine AS build
 
 WORKDIR /app
 
@@ -13,12 +13,20 @@ FROM alpine:latest
 
 WORKDIR /app
 
+RUN apk --no-cache add ca-certificates && update-ca-certificates
+
 COPY --from=build /app/main .
 
 COPY --from=build /app/static ./static
 
-EXPOSE 3000
+RUN mkdir -p /app/config
 
 ENV PORT=3000
+ENV CONFIG_DIR=/app/config
 
-CMD ["./main"] 
+EXPOSE 3000
+
+COPY --from=build /app/docker-entrypoint.sh .
+RUN chmod +x ./docker-entrypoint.sh
+
+ENTRYPOINT ["./docker-entrypoint.sh"]
