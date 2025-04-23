@@ -33,13 +33,20 @@ func main() {
 		log.Println("AVISO: GOOGLE_DRIVE_FOLDER_ID não configurado. Use variável de ambiente para definir a pasta do Drive.")
 	}
 
+	// Inicializa o serviço de textos alternativos
+	altTextService := service.NewAltTextService()
+	log.Println("Serviço de textos alternativos inicializado")
+
 	// Inicializa handlers
-	imageHandler := handler.NewImageHandler(driveService)
+	imageHandler := handler.NewImageHandler(driveService, altTextService)
 
 	// Registra rotas para API de imagens
 	apiRouter := router.PathPrefix("/api").Subrouter()
 	apiRouter.HandleFunc("/images", imageHandler.GetImages).Methods("GET")
 	apiRouter.HandleFunc("/images/{id}/url", imageHandler.GetImageURL).Methods("GET")
+	apiRouter.HandleFunc("/images/{id}/proxy", imageHandler.ProxyImage).Methods("GET")
+	apiRouter.HandleFunc("/images/{id}/alt-text", imageHandler.GetAltText).Methods("GET")
+	apiRouter.HandleFunc("/images/{id}/alt-text", imageHandler.SetAltText).Methods("POST")
 
 	// Configuração para servir arquivos HTML específicos em rotas específicas
 	router.HandleFunc("/", serveIndexPage)

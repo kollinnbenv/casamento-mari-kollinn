@@ -7,4 +7,5 @@ type DriveImage struct {
 	MimeType      string
 	WebViewLink   string
 	ThumbnailLink string
+	AltText       string // Texto alternativo para acessibilidade
 }

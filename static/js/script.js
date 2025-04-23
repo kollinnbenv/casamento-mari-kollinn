@@ -27,8 +27,7 @@ async function loadImages() {
         
         // Convertendo resposta para JSON
         const data = await response.json();
-        console.log("Dados recebidos da API:", data);
-        console.log("Número de imagens recebidas:", data.length);
+        console.log(`Recebidas ${data.length} imagens da API`);
         
         // Esconde o loader
         loadingElement.style.display = 'none';
@@ -45,7 +44,7 @@ async function loadImages() {
         
         // Renderiza cada imagem na galeria
         data.forEach((image, index) => {
-            console.log(`Processando imagem ${index}:`, image);
+            console.log(`Processando metadados da imagem ${index}:`, image);
             
             // Cria container da imagem
             const imgElement = document.createElement('div');
@@ -84,11 +83,183 @@ async function loadImages() {
             });
         });
         
-        // Função para carregar imagens em lotes para evitar sobrecarregar o servidor
-        async function loadImagesInBatches(elements, batchSize = 4, delay = 1000) {
+        // Função para criar timestamp
+        function getTimestamp() {
+            const now = new Date();
+            return `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}.${now.getMilliseconds()}`;
+        }
+        
+        // Função para obter o thumbnailLink independente do formato de nome de propriedade
+        function getThumbnailLink(imageData) {
+            if (!imageData) return null;
+            
+            // Tenta diferentes formatos de propriedade que podem estar presentes nos dados da imagem
+            return imageData.ThumbnailLink || imageData.thumbnailLink || imageData.Thumbnaillink || imageData.thumbnaillink;
+        }
+        
+        // Função para extrair o ID da imagem de uma URL
+        function extractImageId(url) {
+            if (!url) return null;
+            
+            // Para URLs de drive-storage
+            if (url.includes('drive-storage')) {
+                const match = url.match(/drive-storage\/([^\/=]+)/);
+                if (match && match[1]) return match[1];
+            }
+            
+            // Para URLs diretas do Google Drive
+            const driveMatch = url.match(/\/d\/([^\/]+)/);
+            if (driveMatch && driveMatch[1]) return driveMatch[1];
+            
+            return null;
+        }
+        
+        // Função para criar URL do proxy local
+        function createProxyUrl(imageData) {
+            if (!imageData) return null;
+            
+            const imageId = imageData.ID || imageData.id;
+            if (imageId) {
+                // Usa o proxy local para esta imagem
+                return `/api/images/${imageId}/proxy`;
+            }
+            
+            return null;
+        }
+        
+        // Função simplificada para carregar imagens
+        async function loadSingleImage({element, imageId, index, alt, imageData}) {
+            // Adiciona um placeholder enquanto carrega
+            element.innerHTML = '<p>Carregando...</p>';
+            
+            try {
+                // Cria a tag de imagem
+                const img = document.createElement('img');
+                img.alt = alt;
+                
+                // Usa o proxy local em vez de acessar diretamente o Google Drive
+                const proxyUrl = createProxyUrl(imageData);
+                
+                if (proxyUrl) {
+                    console.log(`Usando proxy local para imagem ${index}:`, proxyUrl);
+                    img.src = proxyUrl;
+                    
+                    // Promessa que resolve quando a imagem carrega ou rejeita em erro
+                    await new Promise((resolve, reject) => {
+                        img.onload = () => {
+                            // Limpa conteúdo atual e adiciona a imagem
+                            element.innerHTML = '';
+                            
+                            // Ao clicar na imagem, abre o modal
+                            img.onclick = () => {
+                                openModalWithProxy(imageData);
+                            };
+                            
+                            element.appendChild(img);
+                            console.log(`Imagem ${index} carregada com sucesso`);
+                            resolve();
+                        };
+                        
+                        img.onerror = (error) => {
+                            console.error(`Erro ao carregar imagem ${index}:`, error);
+                            reject(error);
+                        };
+                    });
+                } else {
+                    console.warn(`Sem ID para imagem ${index}, usando placeholder`);
+                    element.innerHTML = '<p>Imagem indisponível</p>';
+                }
+            } catch (error) {
+                console.error(`Erro ao carregar imagem ${index}:`, error);
+                element.innerHTML = '<p>Imagem indisponível</p>';
+            }
+        }
+        
+        // Função para abrir o modal usando proxy
+        function openModalWithProxy(imageData) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            
+            if (!modal || !modalImg) {
+                console.error("Elementos do modal não encontrados");
+                return;
+            }
+            
+            // Mostra o modal com um estado de carregamento
+            modal.style.display = "block";
+            modalImg.style.display = "none";
+            
+            // Adiciona um loader ao modal enquanto a imagem carrega
+            const loader = document.createElement('div');
+            loader.className = 'loader';
+            loader.id = 'modal-loader';
+            modal.appendChild(loader);
+            
+            // Obtém o ID da imagem
+            const imageId = imageData.ID || imageData.id;
+            
+            if (imageId) {
+                // URL para versão de alta resolução através do proxy
+                const proxyUrlHighRes = `/api/images/${imageId}/proxy?size=large`;
+                
+                // Definir atributos e fonte
+                modalImg.alt = imageData.Name || imageData.name || "";
+                modalImg.src = proxyUrlHighRes;
+                
+                // Handler para quando a imagem carregar
+                modalImg.onload = function() {
+                    // Remove o loader
+                    const modalLoader = document.getElementById('modal-loader');
+                    if (modalLoader) modalLoader.remove();
+                    
+                    // Mostra a imagem
+                    modalImg.style.display = "block";
+                };
+                
+                // Handler para erros
+                modalImg.onerror = function() {
+                    // Remove o loader
+                    const modalLoader = document.getElementById('modal-loader');
+                    if (modalLoader) modalLoader.remove();
+                    
+                    // Mostra mensagem de erro
+                    const errorMsg = document.createElement('p');
+                    errorMsg.innerText = "Não foi possível carregar a imagem.";
+                    errorMsg.style.color = "white";
+                    errorMsg.style.textAlign = "center";
+                    errorMsg.style.padding = "20px";
+                    modal.appendChild(errorMsg);
+                };
+            } else {
+                // Remove o loader
+                const modalLoader = document.getElementById('modal-loader');
+                if (modalLoader) modalLoader.remove();
+                
+                // Mostra mensagem de erro
+                const errorMsg = document.createElement('p');
+                errorMsg.innerText = "ID da imagem indisponível";
+                errorMsg.style.color = "white";
+                errorMsg.style.textAlign = "center";
+                errorMsg.style.padding = "20px";
+                modal.appendChild(errorMsg);
+            }
+            
+            // Configura o fechamento do modal ao clicar fora da imagem
+            modal.onclick = function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            };
+        }
+        
+        // Função simples para carregar imagens em lotes
+        async function loadImagesInBatches(elements, batchSize = 5, delay = 500) {
+            console.log(`Iniciando carregamento de imagens em lotes de ${batchSize} com delay de ${delay}ms`);
+            
             // Dividir elementos em lotes
             for (let i = 0; i < elements.length; i += batchSize) {
                 const batch = elements.slice(i, i + batchSize);
+                console.log(`Carregando lote ${Math.floor(i/batchSize) + 1} de ${Math.ceil(elements.length/batchSize)}`);
                 
                 // Carregar lote atual
                 const promises = batch.map(item => loadSingleImage(item));
@@ -99,49 +270,8 @@ async function loadImages() {
                     await new Promise(resolve => setTimeout(resolve, delay));
                 }
             }
-        }
-        
-        // Função para carregar uma única imagem com retry usando algoritmo do Google
-        async function loadSingleImage({element, imageId, index, alt, imageData}) {
-            // Adiciona um placeholder enquanto carrega
-            element.innerHTML = '<p>Carregando...</p>';
             
-            try {
-                // Encapsula toda a lógica de carregamento da imagem em uma função para usar com backoff
-                await exponentialBackoff(async () => {
-                    // Cria a tag de imagem
-                    const img = document.createElement('img');
-                    
-                    // URL direta para o Google Drive
-                    img.src = `https://lh3.googleusercontent.com/d/${imageId}?cb=${Date.now()}`;
-                    img.alt = alt;
-                    
-                    // Retorna uma promessa que resolve quando a imagem carrega ou rejeita em erro
-                    return new Promise((resolve, reject) => {
-                        img.onload = () => {
-                            // Limpa conteúdo atual e adiciona a imagem
-                            element.innerHTML = '';
-                            
-                            // Ao clicar na imagem, abre o modal
-                            img.onclick = () => {
-                                openModal(imageId);
-                            };
-                            
-                            element.appendChild(img);
-                            resolve();
-                        };
-                        
-                        img.onerror = (error) => {
-                            console.error(`Erro ao carregar imagem ${index}:`, error);
-                            reject(error);
-                        };
-                    });
-                });
-            } catch (error) {
-                // Se todas as tentativas falharam após backoff exponencial
-                console.error(`Erro fatal ao carregar imagem ${index} após várias tentativas:`, error);
-                element.innerHTML = '<p>Imagem indisponível</p>';
-            }
+            console.log("Carregamento em lotes concluído");
         }
         
         // Inicia o carregamento das imagens em lotes
@@ -153,78 +283,6 @@ async function loadImages() {
         errorElement.textContent = `Erro ao carregar imagens: ${error.message}`;
         errorElement.style.display = 'block';
     }
-}
-
-function openModal(imageId) {
-    const modal = document.getElementById('imageModal');
-    const modalImg = document.getElementById('modalImg');
-    
-    if (!modal || !modalImg) {
-        console.error("Elementos do modal não encontrados");
-        return;
-    }
-    
-    // Mostra o modal com um estado de carregamento
-    modal.style.display = "block";
-    modalImg.style.display = "none";
-    
-    // Adiciona um loader ao modal enquanto a imagem carrega
-    const loader = document.createElement('div');
-    loader.className = 'loader';
-    loader.id = 'modal-loader';
-    modal.appendChild(loader);
-    
-    // Carrega a imagem do modal com backoff exponencial
-    (async () => {
-        try {
-            await exponentialBackoff(async () => {
-                return new Promise((resolve, reject) => {
-                    // URL direta com parâmetro anti-cache
-                    modalImg.src = `https://lh3.googleusercontent.com/d/${imageId}?cb=${Date.now()}`;
-                    
-                    modalImg.onload = () => {
-                        resolve();
-                    };
-                    
-                    modalImg.onerror = (error) => {
-                        console.error(`Erro ao carregar imagem modal ${imageId}:`, error);
-                        reject(error);
-                    };
-                });
-            });
-            
-            // Imagem carregada com sucesso após possíveis retentativas
-            const modalLoader = document.getElementById('modal-loader');
-            if (modalLoader) modalLoader.remove();
-            modalImg.style.display = "block";
-            
-        } catch (error) {
-            // Todas as tentativas falharam
-            console.error(`Falha ao carregar imagem modal ${imageId} após múltiplas tentativas`);
-            
-            // Remove o loader
-            const modalLoader = document.getElementById('modal-loader');
-            if (modalLoader) modalLoader.remove();
-            
-            // Mostra mensagem de erro
-            const errorMsg = document.createElement('p');
-            errorMsg.innerText = "Não foi possível carregar a imagem. Tente novamente mais tarde.";
-            errorMsg.style.color = "white";
-            errorMsg.style.textAlign = "center";
-            errorMsg.style.padding = "20px";
-            errorMsg.style.position = "relative";
-            errorMsg.style.top = "50%";
-            errorMsg.style.transform = "translateY(-50%)";
-            modal.appendChild(errorMsg);
-        }
-    })();
-    
-    // Configura o fechamento do modal ao clicar fora da imagem
-    modal.onclick = function(event) {
-        if (event.target === modal) {
-            closeModal();
-        }
-    };
 }
 
 function closeModal() {
@@ -317,35 +375,6 @@ function enviarFormulario() {
       <p>Agradecemos a sua confirmação.</p>
     </div>
   `;
-}
-
-// Função para aplicar espera exponencial conforme documentação Google
-// Implementada diretamente das recomendações em: 
-// https://developers.google.com/workspace/drive/labels/limits?hl=pt_BR
-async function exponentialBackoff(retryFunction, maxRetries = 5) {
-    let retryCount = 0;
-    const maxBackoff = 64000; // 64 segundos em milissegundos (valor recomendado pelo Google)
-    
-    while (retryCount < maxRetries) {
-        try {
-            return await retryFunction();
-        } catch (error) {
-            retryCount++;
-            
-            if (retryCount >= maxRetries) {
-                throw error; // Desiste após número máximo de tentativas
-            }
-            
-            // Cálculo do tempo de espera: min(((2^n)+random_number_milliseconds), maximum_backoff)
-            const randomMs = Math.floor(Math.random() * 1000); // Valor aleatório até 1000ms
-            const waitTime = Math.min(((Math.pow(2, retryCount) * 1000) + randomMs), maxBackoff);
-            
-            console.log(`Tentativa ${retryCount} falhou. Aguardando ${waitTime}ms antes de tentar novamente...`);
-            
-            // Espera o tempo calculado
-            await new Promise(resolve => setTimeout(resolve, waitTime));
-        }
-    }
 }
 
 // Ao carregar a página, inicializa os componentes necessários

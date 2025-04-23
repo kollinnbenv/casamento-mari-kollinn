@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -121,7 +122,7 @@ func (ds *DriveService) GetDriveImages(ctx context.Context) ([]model.DriveImage,
 
 	fileList, err := srv.Files.List().
 		Q(query).
-		Fields("files(id, name, mimeType, webViewLink, thumbnailLink)").
+		Fields("files(id, name, mimeType, webViewLink, thumbnailLink, description, properties)").
 		PageSize(100).
 		OrderBy("name").
 		Do()
@@ -131,12 +132,37 @@ func (ds *DriveService) GetDriveImages(ctx context.Context) ([]model.DriveImage,
 
 	var images []model.DriveImage
 	for _, file := range fileList.Files {
+		// Tentar obter o texto alternativo das propriedades personalizadas
+		altText := ""
+
+		// Primeiro verifica se existe nas propriedades personalizadas
+		if file.Properties != nil {
+			if alt, ok := file.Properties["altText"]; ok && alt != "" {
+				altText = alt
+			}
+		}
+
+		// Se não encontrou nas propriedades, usa a descrição como fallback
+		if altText == "" && file.Description != "" {
+			altText = file.Description
+		}
+
+		// Se ainda estiver vazio, usa o nome do arquivo sem a extensão
+		if altText == "" {
+			altText = file.Name
+			// Remove a extensão do arquivo
+			if dotIndex := strings.LastIndex(altText, "."); dotIndex > 0 {
+				altText = altText[:dotIndex]
+			}
+		}
+
 		images = append(images, model.DriveImage{
 			ID:            file.Id,
 			Name:          file.Name,
 			MimeType:      file.MimeType,
 			WebViewLink:   file.WebViewLink,
 			ThumbnailLink: file.ThumbnailLink,
+			AltText:       altText,
 		})
 	}
 
